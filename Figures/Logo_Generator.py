@@ -64,7 +64,7 @@ def plot_results(X, Y, Z_combined, filtered_samples, output_file):
 
     # Add text labels
     plt.text(x=4, y=0.5, s='Trullikon Project', fontsize=50, ha='left', va='center')
-    plt.text(x=4.2, y=-0.5, s='A Toolbox for Data Analysis, Forward Model Simulation,\nBayesian Inversion and Posterior Sampling', fontsize=15, ha='left', va='center')
+    plt.text(x=4.2, y=-0.5, s='A Toolbox for Data Analysis, Forward Model Simulation,\nBayesian Inversion and Posterior Sampling in\nA real CO2 injection site located in Switzerland, Trullikon-1-1', fontsize=15, ha='left', va='center')
 
     # Set limits to make sure the plot is centered
     plt.xlim(-4, 4)
