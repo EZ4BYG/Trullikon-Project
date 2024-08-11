@@ -1,1 +1,1 @@
-Example Figures and a function used to generate the logo .svg
+Example figures and a function used to generate the logo .svg
