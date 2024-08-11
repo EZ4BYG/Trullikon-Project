@@ -1,17 +1,3 @@
-```javascript
-<head>
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            tex2jax: {
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-            inlineMath: [['$','$']]
-            }
-        });
-    </script>
-</head>
-```
-
 # Trullikon Project
 
 ---
@@ -29,18 +15,22 @@ The Trullikon project uses an analytical forward model (a generalized Geertsma s
 - **Anisotropic model**: Horizontal and Vertical $V_s$, Horizontal and Vertical $V_p$, Biot's coefficient, and Bulk density.
 
 For a specific problem, one can start by using a simple isotropic model to conduct sensitivity analysis of various parameters concerning surface observations, to determine which parameters have a significant impact on the observed data and which have a lesser impact. If the parameters of most layers are not sensitive to the surface observations and only the parameters in some target formation layer are sensitive, it is entirely feasible to use a simple isotropic model without needing to employ an anisotropic model. Moreover, the parameters for each layer are derived from laboratory data of rock samples from the borehole, so the data are in a range (which can also be considered as an uncertainty range). Therefore, the sensitivity analysis tool we use also should account for the uncertainty of each parameter, and hence an **Uncertainty-Adjusted Jacobian Matrix** is used here. The general Jacobian matrix can be defined as follows
-$$
+
+```math
 \mathbf{J}_{i j}=\left.\frac{\partial d_i}{\partial m_j}\right|_{m_j=m_{j, \text { mid }}}
-$$
-where $m_j=m_{j, \mathrm{mid}}$ is the midpoint of the uncertainty range for the $j$-th model parameter. Then, the uncertainty range $r_j$ for the $j$-th model parameter can be obtained by $r_j=m_{j, \max }-m_{j, \min}$. Finally, by combining the uncertainty range $r_j$ with the original Jacobian matrix $\mathbf{J}_{ij}$, the Uncertainty-Adjusted Jacobian Matrix $\mathbf{J}_{i j}^{\prime}$ can be defined as 
-$$
+```
+
+where $m_j=m_{j, \mathrm{mid}}$ is the midpoint of the uncertainty range for the $j$-th model parameter. Then, the uncertainty range $r_j$ for the $j$-th model parameter can be obtained by $`r_j=m_{j, \max }-m_{j, \min}`$. Finally, by combining the uncertainty range $r_j$ with the original Jacobian matrix $`\mathbf{J}_{ij}`$, the Uncertainty-Adjusted Jacobian Matrix $`\mathbf{J}_{i j}^{\prime}`$ can be defined as 
+
+```math
 \mathbf{J}_{i j}^{\prime}=\mathbf{J}_{i j} \cdot r_j=\left(\begin{array}{cccc}
 J_{11} \cdot r_1 & J_{12} \cdot r_2 & \cdots & J_{1, m} \cdot r_m \\
 J_{21} \cdot r_1 & J_{22} \cdot r_2 & \cdots & J_{2, m} \cdot r_m \\
-\vdots & \vdots & \ddots & \vdots \\
+\ \vdots & \vdots & \ddots & \vdots \\
 J_{n, 1} \cdot r_1 & J_{n, 2} \cdot r_2 & \cdots & J_{n, m} \cdot r_m
 \end{array}\right)
-$$
+```
+
 Each element in $\mathbf{J}_{i j}^{\prime}$ represents the total sensitivity of the $i$-th observation point to the $j$-th model parameter throughout the entire uncertainty range of the model parameter. In the `Step2_Sensitivity_Analysis` folder, there are two files: `Jacobian_SA_Main.py` is the main function file, where the model and the range of model parameters for sensitivity analysis are defined; `Jacobian_Matrix_Sensitivity_Analysis.py` is the function file, which includes three important functions:
 
 - `compute_jacobian_matrix`: This function is used to calculate the general Jacobian matrix.
@@ -72,44 +62,53 @@ Before conducting numerical experiments, we first need to obtain a true model. T
 
 ### Step 4-2: Bayesian Least-Squares Method with Posterior Sampling based on Cholesky Decomposition
 
-Given that this is a linear inversion problem, the Bayesian Least-Squares Method (hereinafter referred to as BLSM) can be considered as a first approach for solving it. When the prior data and model both follow a Gaussian distribution, the posterior and misfit function $\chi({\mathbf{m}})$ are 
-$$
+Given that this is a linear inversion problem, the Bayesian Least-Squares Method (hereinafter referred to as BLSM) can be considered as a first approach for solving it. When the prior data and model both follow a Gaussian distribution, the posterior and misfit function $`\chi({\mathbf{m}})`$ are 
+
+```math
 p\left(\mathbf{m} \mid \mathbf{d}^{\text {obs }}\right)=\text { const. } e^{-\frac{1}{2}\left(\mathbf{m}-\mathbf{m}^{\text {prior }}\right)^T \mathbf{C}_M^{-1}\left(\mathbf{m}-\mathbf{m}^{\text {prior }}\right)-\frac{1}{2}\left(\mathbf{G m}-\mathbf{d}^{\text {obs }}\right)^T \mathbf{C}_D^{-1}\left(\mathbf{G m}-\mathbf{d}^{\text {obs }}\right)}
-$$
+```
 
-$$
+```math
 \chi(\mathbf{m})=\frac{1}{2}\left(\mathbf{m}-\mathbf{m}^{\text {prior }}\right)^T \mathbf{C}_M^{-1}\left(\mathbf{m}-\mathbf{m}^{\text {prior }}\right)+\frac{1}{2}\left(\mathbf{G m}-\mathbf{d}^{\text {obs }}\right)^T \mathbf{C}_D^{-1}\left(\mathbf{G m}-\mathbf{d}^{\text {obs }}\right)
-$$
+```
 
-Minimizing the misfit function yields the deterministic posterior mean $\tilde{\mathbf{m}}$ and posterior covariance matrix $\tilde{\mathbf{C}}_M$:
-$$
+Minimizing the misfit function yields the deterministic posterior mean $`\tilde{\mathbf{m}}`$ and posterior covariance matrix $`\tilde{\mathbf{C}}_M`$:
+
+```math
 \tilde{\mathbf{m}}=\mathbf{m}^{\text {prior }}+\mathbf{C}_M \mathbf{G}^T\left(\mathbf{C}_D+\mathbf{G C}_M \mathbf{G}^T\right)^{-1}\left(\mathbf{d}^{\text {obs }}-\mathbf{G m}^{\text {prior }}\right)
-$$
+```
 
-$$
+```math
 \tilde{\mathbf{C}}_M=\left(\mathbf{G}^T \mathbf{C}_D^{-1} \mathbf{G}+\mathbf{C}_M^{-1}\right)^{-1}=\mathbf{C}_M-\mathbf{C}_M \mathbf{G}^T\left(\mathbf{C}_D+\mathbf{G} \mathbf{C}_M \mathbf{G}^T\right)^{-1} \mathbf{G} \mathbf{C}_M
-$$
+```
 
-Although the solution from BLSM is the maximum likelihood point of the posterior distribution, it doesn't mean that the models around it are without value. Therefore, after obtaining $\tilde{\mathbf{m}}$ and $\tilde{\mathbf{C}}_M$, it is common to sample from the posterior using Cholesky decomposition to obtain more possible model results. First, perform Cholesky decomposition on $\tilde{\mathbf{C}}_M$ (this matrix must be symmetric and positive definite): 
-$$
+Although the solution from BLSM is the maximum likelihood point of the posterior distribution, it doesn't mean that the models around it are without value. Therefore, after obtaining $`\tilde{\mathbf{m}}`$ and $`\tilde{\mathbf{C}}_M`$, it is common to sample from the posterior using Cholesky decomposition to obtain more possible model results. First, perform Cholesky decomposition on $`\tilde{\mathbf{C}}_M`$ (this matrix must be symmetric and positive definite): 
+
+```math
 \tilde{\mathbf{C}}_M=\mathbf{L L}^{\mathrm{T}}
-$$
-Then, using the lower triangular matrix $\mathbf{L}$ and $\tilde{\mathbf{m}}$ to randomly generate samples ($\mathbf{z}$ is a random deviation vector with a standard normal distribution: mean is 0 and standard deviation is 1). 
-$$
+```
+
+Then, using the lower triangular matrix $`\mathbf{L}`$ and $`\tilde{\mathbf{m}}`$ to randomly generate samples ($`\mathbf{z}`$ is a random deviation vector with a standard normal distribution: mean is 0 and standard deviation is 1). 
+
+```math
 \mathbf{y}=\mathbf{L} \mathbf{z}+\tilde{\mathbf{m}}
-$$
-The BLSM solution and posterior sampling based on Cholesky decomposition described above are implemented in `Step2_1_Inversion_BLSM_Tilt_Main.py`. Note that this file only uses the tiltx and tilty data. In a later step, both tilt and InSAR data will be used together for joint data inversion. An example of a true model and posterior model mean $\tilde{\mathbf{m}}$ is shown below
+```
+
+The BLSM solution and posterior sampling based on Cholesky decomposition described above are implemented in `Step2_1_Inversion_BLSM_Tilt_Main.py`. Note that this file only uses the tiltx and tilty data. In a later step, both tilt and InSAR data will be used together for joint data inversion. An example of a true model and posterior model mean $`\tilde{\mathbf{m}}`$ is shown below
 
 ![An example of a true model and posterior model mean](Figures/combined_true_posterior_model.png)
 
 ### Step 4-3: Bayesian Non-negative Least-Squares Method and Bounded Metropolis-Hastings Posterior Sampling 
 
 In the above figure, it can be observed that the BLSM solution may result in negative values in the edge grids. To avoid negative values in the inversion results, a novel approach can be taken by combining Bayesian inversion with the Non-negative Least-Squares Method (hereinafter referred to as NNLSM) to form the Bayesian Non-negative Least-Squares Method (hereinafter referred to as BNNLSM). The misfit function for NNLSM is:
-$$
+
+```math
 \min _{\mathbf{x}}\|\mathbf{A x}-\mathbf{b}\|_2^2 \quad \text { subject to } \mathrm{x} \geq 0
-$$
+```
+
 By first performing Cholesky decomposition on the prior information in the Bayesian inversion and then incorporating it into the NNLSM, we can obtain:
-$$
+
+```math
 \min _{\mathbf{m}}\left\|\underbrace{\left[\begin{array}{c}
 \mathbf{L}_D^{-1} \mathbf{G} \\
 \mathbf{L}_M^{-1}
@@ -117,8 +116,9 @@ $$
 \mathbf{L}_D^{-1} \mathbf{d}^{\text {obs }} \\
 \mathbf{L}_M^{-1} \mathbf{m}^{\text {prior }}
 \end{array}\right]}_{\mathbf{b}}\right\|_2^2 \text { subject to } \mathbf{m} \geq 0
-$$
-where $\mathbf{C}_D=\mathbf{L}_D \mathbf{L}_D^T$ and $\mathbf{C}_M=\mathbf{L}_M \mathbf{L}_M^T$ ($\mathbf{C}_D$ and $\mathbf{C}_M$ are prior data and model covariance matrices, they are symmetric and positive definite). The BNNLSM objective function can be directly solved using the `nnls` function from `scipy.optimize`. Note that when using BNNLSM, the inclusion of the non-negative constraint means that the posterior distribution is no longer a simple Gaussian distribution. Therefore, posterior sampling must be performed using the Bounded Adaptive Metropolis-Hastings Algorithm (hereinafter referred to as BAMHA) on the original posterior function. The flowchart is as follows:
+```
+
+where $`\mathbf{C}_D=\mathbf{L}_D \mathbf{L}_D^T`$ and $`\mathbf{C}_M=\mathbf{L}_M \mathbf{L}_M^T`$ ($`\mathbf{C}_D`$ and $`\mathbf{C}_M`$ are prior data and model covariance matrices, they are symmetric and positive definite). The BNNLSM objective function can be directly solved using the `nnls` function from `scipy.optimize`. Note that when using BNNLSM, the inclusion of the non-negative constraint means that the posterior distribution is no longer a simple Gaussian distribution. Therefore, posterior sampling must be performed using the Bounded Adaptive Metropolis-Hastings Algorithm (hereinafter referred to as BAMHA) on the original posterior function. The flowchart is as follows:
 
 ![Workflow of the Bounded Metropolis-Hastings Algorithm](Figures/Bounded_AMHA_Workflow.png)
 
@@ -129,11 +129,14 @@ BAMHA is a variant of the Metropolis-Hastings Algorithm that incorporates projec
 ### Step 4-4: Bayesian Bounded Least-Squares Method and Bounded HMC Posterior Sampling 
 
 Combining Bayesian inversion with the Bounded Least-Squares Method results in the Bayesian Bounded Least-Squares Method (hereinafter referred to as BBLSM). The misfit function of the Bounded Least-Squares Method is defined as follows:
-$$
+
+```math
 \min _{\mathbf{x}}\|\mathbf{A x}-\mathbf{b}\|_2^2 \quad \text { subject to } l \leq \mathrm{x} \leq u
-$$
+```
+
 This misfit function can be directly solved using the `lsq_linear` function from `scipy.optimize`. By following the same steps as in Step 4-3, the objective function for BBLSM can be obtained. It is identical to that of BNNLSM, except that the constraints are different:
-$$
+
+```math
 \min _{\mathbf{m}}\left\|\underbrace{\left[\begin{array}{c}
 \mathbf{L}_D^{-1} \mathbf{G} \\
 \mathbf{L}_M^{-1}
@@ -141,7 +144,8 @@ $$
 \mathbf{L}_D^{-1} \mathbf{d}^{\text {obs }} \\
 \mathbf{L}_M^{-1} \mathbf{m}^{\text {prior }}
 \end{array}\right]}_{\mathbf{b}}\right\|_2^2 \text { subject to } l \leq \mathbf{m} \leq u
-$$
+```
+
 At this point, posterior sampling can certainly utilize BAMHA. However, for such linear problems, computing the first and second-order gradients of the misfit function (potential energy) is straightforward. Therefore, one might consider using the Bounded Hamiltonian Monte Carlo (HMC) Algorithm (hereinafter referred to as BHMCA), which offers higher sampling efficiency in high-dimensional model spaces. The flowchart is as follows:
 
 ![Workflow of Bounded HMC](Figures/Bounded_HMC_Workflow.png)
