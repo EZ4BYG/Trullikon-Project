@@ -156,11 +156,7 @@ When planning to have 20,000 samples, only about 3,500 samples were accepted usi
 
 ![BHMCA Posterior Samples](Figures/BNNLSM_HMC_posterior_samples.png)
 
-Further understanding of [Hamiltonian Monte Carlo](https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo):
-
-csc
-
-
+Further understanding of [Hamiltonian Monte Carlo](https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo) can check [here](Step4_Linear_Inversion_with_Posterior_Sampling/readme.md). 
 
 ## References
 
