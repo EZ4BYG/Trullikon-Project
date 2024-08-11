@@ -1,4 +1,6 @@
-# Trullikon Project
+<p align="center">
+  <img src="Figures/Three_Peaks_Logo.svg" />
+</p>
 
 ---
 
