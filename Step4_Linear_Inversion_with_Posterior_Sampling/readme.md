@@ -64,11 +64,11 @@ The relationship between Momentum $\mathbf{p}$ and Potential Energy $`U(\mathbf{
 
 The HMC algorithm abstracts each possible point in the model space as the position $`\mathbf{m}`$ in Hamiltonian Dynamics. The expression for the potential energy $`U(\mathbf{m})`$ at each point is defined by the **misfit function** corresponding to that point. The exploration process in the model space is analogous to the movement of an object in Hamiltonian Dynamics and can be described by the following two dynamic equations:
 ```math
-\text{Position update:}\quad \frac{d \mathbf{m}}{d t}=\frac{\partial H(\mathbf{m}, \mathbf{p})}{\partial \mathbf{p}}=\mathbf{M}^{-1} \mathbf{p}
+\text{Position update:}\quad \frac{d \mathbf{m}}{d t}=\frac{\partial H(\mathbf{m}, \mathbf{p})}{\partial \mathbf{p}}=\frac{\partial K(p)}{\partial \mathbf{p}}=\mathbf{M}^{-1} \mathbf{p}
 ```
 
 ```math
-\text{Momentum update:}\quad \frac{d \mathbf{p}}{d t}=-\frac{\partial H(\mathbf{m}, \mathbf{p})}{\partial \mathbf{m}}=-\nabla U(\mathbf{m})
+\text{Momentum update:}\quad \frac{d \mathbf{p}}{d t}=-\frac{\partial H(\mathbf{m}, \mathbf{p})}{\partial \mathbf{m}}=-\frac{\partial U(m)}{\partial \mathbf{m}}=-\nabla U(\mathbf{m})
 ```
 
 The exploration process in HMC at each state $`(\mathbf{m}, \mathbf{p})`$ involves solving the above two differential equations. In practice, this is done using the **leapfrog** numerical integration method as a substitute. One important point to note: Since the HMC algorithm simulates the movement of an object in a conservative field, the total energy $`H(\mathbf{m}, \mathbf{p}) = U(\mathbf{m}) + K(\mathbf{p})`$ should theoretically be equal at any state $`(\mathbf{m}, \mathbf{p})`$. However, because the above differential equations are solved approximately using a numerical iterative method, there is inevitably some numerical error! Therefore, in practice, when a new state $`(\mathbf{m}_{\text{new}}, \mathbf{p}_{\text{new}})`$ is obtained after once leapfrog integration, the energy is not perfectly conserved. In this case, the Metropolis rule is introduced to evaluate whether the energy difference between the two states is too large: if the energy difference is too large, the new state is rejected; if the energy difference is acceptable, the new state is accepted. The energy difference measured by the Metropolis rule in the algorithm is used to calculate the acceptance rate.
