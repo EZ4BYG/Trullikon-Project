@@ -60,7 +60,7 @@ The relationship between Momentum $\mathbf{p}$ and Potential Energy $`U(\mathbf{
 \frac{d\mathbf{p}}{dt} = \frac{d(m\mathbf{v})}{dt} = m\frac{d\mathbf{v}}{dt} = m\mathbf{a} = \mathbf{F} = -\nabla U(\mathbf{m})
 ```
 
-### Understanding of  the HMC Algorithm
+### Understanding of the HMC Algorithm
 
 The HMC algorithm abstracts each possible point in the model space as the position $`\mathbf{m}`$ in Hamiltonian Dynamics. The expression for the potential energy $`U(\mathbf{m})`$ at each point is defined by the **misfit function** corresponding to that point. The exploration process in the model space is analogous to the movement of an object in Hamiltonian Dynamics and can be described by the following two dynamic equations:
 ```math
@@ -97,3 +97,17 @@ The potential energy is defined as $`U(\mathbf{m}) = \chi(\mathbf{m})`$, so its 
 ```
 
 The Kinetic Energy $`K(\mathbf{p})=\frac{1}{2} \mathbf{p}^T \mathbf{M}^{-1} \mathbf{p}`$ is always the same. When the gradient of $`U(\mathbf{m})`$ has a deterministic expression, leapfrog integration becomes straightforward. When the Hessian matrix has a deterministic expression, the mass matrix $`\mathbf{M}`$ can be set as the Hessian matrix. 
+
+### Two Methods for Measuring the Distance Between Two Model Samples
+
+- Difference in $`\chi(m)`$ values (Misfit Function Difference)
+```math
+\Delta \chi=\chi\left(\mathbf{m}_1\right)-\chi\left(\mathbf{m}_2\right)
+```
+This measure tells you how much the misfit (or the negative log-posterior when the prior information are all Gaussian distribution) changes between the two samples.   This measure is particularly useful when you are interested in comparing how close the two samples are in terms of their fit to the **observed data** and **prior information**. It reflects the "quality" of the fit for each sample, not just the spatial relationship between them.
+
+- Euclidean Distance in Parameter Space (Spatial Distance)
+```math
+d\left(\mathbf{m}_1, \mathbf{m}_2\right)=\left\|\mathbf{m}_1-\mathbf{m}_2\right\|=\sqrt{\sum_{i=1}^n\left(m_{1 i}-m_{2 i}\right)^2}  
+```
+This distance measure tells you how far apart the two samples are in the parameter space. It is a purely geometric measure and does not take into account the likelihood or posterior probability directly. This is useful when you are interested in understanding the **diversity** of the samples in terms of the parameter values themselves. It helps you to see how spread out the samples are in the parameter space, which can be important for assessing the **exploration efficiency** of the HMC algorithm.
