@@ -158,6 +158,8 @@ When planning to have 20,000 samples, only about 3,500 samples were accepted usi
 
 Further understanding of [Hamiltonian Monte Carlo](https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo) can check [here](Step4_Linear_Inversion_with_Posterior_Sampling/readme.md). 
 
+Further understanding of [Metropolis–Hastings Algorithm](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm) can check [here](Step4_Linear_Inversion_with_Posterior_Sampling/readme.md). 
+
 ## References
 
 - [Geophysical Data Analysis: Discrete Inverse Theory. Academic Press, 4th edition](https://www.sciencedirect.com/book/9780128135556/geophysical-data-analysis)
