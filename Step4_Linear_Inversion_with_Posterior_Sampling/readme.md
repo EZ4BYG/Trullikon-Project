@@ -111,3 +111,7 @@ This measure tells you how much the misfit (or the negative log-posterior when t
 d\left(\mathbf{m}_1, \mathbf{m}_2\right)=\left\|\mathbf{m}_1-\mathbf{m}_2\right\|=\sqrt{\sum_{i=1}^n\left(m_{1 i}-m_{2 i}\right)^2}  
 ```
 This distance measure tells you how far apart the two samples are in the parameter space. It is a purely geometric measure and does not take into account the likelihood or posterior probability directly. This is useful when you are interested in understanding the **diversity** of the samples in terms of the parameter values themselves. It helps you to see how spread out the samples are in the parameter space, which can be important for assessing the **exploration efficiency** of the HMC algorithm.
+
+--- 
+
+## Further Understanding of [Metropolis-Hastings](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm) Algorithm：
